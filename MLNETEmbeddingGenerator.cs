@@ -65,9 +65,6 @@ public class MLNETEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<flo
         var transformedData = _pipeline.Transform(dataView);
         
         // Extract embedding column and map it to Embedding<float>
-        // var embeddings = 
-        //     _mlContext.Data.CreateEnumerable<EmbeddingOutput>(transformedData, reuseRowObject: false)
-        //         .Select(x => new Embedding<float>(x.Embedding));
         var embeddings = transformedData.ToGeneratedEmbeddings<float>("Embedding");
 
         // Return embeddings
