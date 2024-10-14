@@ -1,8 +1,10 @@
 # ML.NET reference implementation of Microsoft.Extensions.AI IEmbeddingGenerator
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/luisquintanilla/MLNETEmbeddingGenerator)
+
 ## Prerequisites
 
-- .NET 8 SDK
+- .NET 8 SDK or greater
 - VS or VS Code
 
 ## Run sample
