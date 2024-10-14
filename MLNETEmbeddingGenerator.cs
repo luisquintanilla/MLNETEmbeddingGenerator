@@ -80,7 +80,7 @@ public class MLNETEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<flo
     }
 }
 
-public static class EmbeddingExtensions
+public static class IDataViewEmbeddingExtensions
 {
     public static GeneratedEmbeddings<Embedding<T>> ToGeneratedEmbeddings<T>(this IDataView dv, string columnName)
     {
