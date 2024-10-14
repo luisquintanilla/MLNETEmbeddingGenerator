@@ -1,5 +1,6 @@
 using Microsoft.Extensions.AI;
 using Microsoft.ML;
+using Microsoft.ML.Data;
 using Microsoft.ML.Transforms.Text;
 
 // Reference implementation of ML.NET embedding generator
@@ -64,16 +65,27 @@ public class MLNETEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<flo
         var transformedData = _pipeline.Transform(dataView);
         
         // Extract embedding column and map it to Embedding<float>
-        var embeddings = 
-            _mlContext.Data.CreateEnumerable<EmbeddingOutput>(transformedData, reuseRowObject: false)
-                .Select(x => new Embedding<float>(x.Embedding));
-        
+        // var embeddings = 
+        //     _mlContext.Data.CreateEnumerable<EmbeddingOutput>(transformedData, reuseRowObject: false)
+        //         .Select(x => new Embedding<float>(x.Embedding));
+        var embeddings = transformedData.ToGeneratedEmbeddings<float>("Embedding");
+
         // Return embeddings
-        return Task.FromResult(new GeneratedEmbeddings<Embedding<float>>(embeddings));
+        return Task.FromResult(embeddings);
     }
 
     public ITransformer? GetService<ITransformer>(object? key = null) where ITransformer : class
     {
         return _pipeline as ITransformer;
+    }
+}
+
+public static class EmbeddingExtensions
+{
+    public static GeneratedEmbeddings<Embedding<T>> ToGeneratedEmbeddings<T>(this IDataView dv, string columnName)
+    {
+        var embeddings = dv.GetColumn<float[]>(columnName);
+        return new GeneratedEmbeddings<Embedding<T>>(
+            embeddings.Select(x => new Embedding<T>(x.Cast<T>().ToArray())));
     }
 }
